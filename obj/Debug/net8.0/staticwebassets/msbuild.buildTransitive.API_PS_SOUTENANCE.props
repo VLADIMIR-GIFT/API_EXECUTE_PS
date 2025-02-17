@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\API_PS_SOUTENANCE.props" />
+</Project>

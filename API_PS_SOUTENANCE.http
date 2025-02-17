@@ -1,0 +1,6 @@
+@API_PS_SOUTENANCE_HostAddress = http://localhost:5031
+
+GET {{API_PS_SOUTENANCE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
