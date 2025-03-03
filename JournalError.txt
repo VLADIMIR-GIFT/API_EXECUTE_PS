@@ -1,0 +1,52 @@
+[2025-02-27 11:29:36] Erreur : Le paramètre @TraceErrorLigne est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 59
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 25
+------------------------------------------------------------
+[2025-02-27 11:50:11] Erreur : Le paramètre @TraceErrorLigne est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 59
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 25
+------------------------------------------------------------
+[2025-02-27 11:55:39] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 12:00:44] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 12:43:20] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 13:02:14] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-03-02 00:10:45] Erreur : Type de recordset non pris en charge.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 75
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 39
+------------------------------------------------------------

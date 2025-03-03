@@ -1,12 +1,14 @@
 {
-    "ProcedureName": "PS_ACTION_TB_E_CLASS",
-    "Params": {
-      "P_MODE": 1,
-      "P_ID_CLASS_PK": 1006,
-      "P_LIBELLE_CLAS": "Informatique de Gestion",
-      "P_ANNEE_SCOLAIRE": 2024,
-      "TraceErrorLigne":"1122"
-    }
-  }
-
-
+  "DatabaseAlias": "base_ecole",
+  "ProcedureName": "PS_ACTION_TB_E_CLASS",
+  "Parameters": {
+    "P_MODE": 2,
+    "P_ID_CLASS_PK": 100888,
+    "P_LIBELLE_CLAS": "Informatique de Gestion",
+    "P_ANNEE_SCOLAIRE": 2024,
+    "RETURN_VALUE": 1,
+    "TraceErrorLigne": "some_value_here"
+  },
+  "RecordsetType": 2,
+  "request": "requiredRequestValue"
+}

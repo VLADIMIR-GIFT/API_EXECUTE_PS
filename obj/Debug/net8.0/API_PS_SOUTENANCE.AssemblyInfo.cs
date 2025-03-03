@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_PS_SOUTENANCE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7709e5f826a601fcb53048480f9f96cac2bf4405")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+370765f04f0a7d61d08f47190710f32449facfc1")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_PS_SOUTENANCE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_PS_SOUTENANCE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

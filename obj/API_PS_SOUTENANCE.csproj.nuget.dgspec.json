@@ -45,6 +45,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.11, )"
@@ -53,9 +57,37 @@
               "target": "Package",
               "version": "[6.0.1, )"
             },
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.2.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
+            "Oracle.ManagedDataAccess": {
+              "target": "Package",
+              "version": "[23.7.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
+            },
+            "System.Data.OleDb": {
+              "target": "Package",
+              "version": "[9.0.2, )"
             }
           },
           "imports": [

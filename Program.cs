@@ -1,9 +1,21 @@
 using Microsoft.OpenApi.Models;
-using API_PS_SOUTENANCE.Services;  // Assurez-vous que cette ligne est présente pour le bon espace de noms
+using API_PS_SOUTENANCE.Services;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddTransient<ProcedureLoader>();
 
-// Correction de l'injection de `ProcedureService` avec `Scoped` (ou `Transient` si vous préférez)
+// Enregistrement de XmlConfigurationService
+builder.Services.AddSingleton(provider =>
+{
+    var env = provider.GetRequiredService<IWebHostEnvironment>();
+    return new XmlConfigurationService(env);
+});
+
+// Enregistrement de Helper
+builder.Services.AddSingleton<Helper>();
+
+// Correction de l'injection de `ProcedureService`
 builder.Services.AddScoped<ProcedureService>(provider =>
     new ProcedureService(builder.Configuration.GetConnectionString("base_ecoleConnection")));
 
@@ -15,7 +27,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Ajouter les services nécessaires pour les contrôleurs
-builder.Services.AddControllers();  // Ajout de cette ligne pour les contrôleurs
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -26,11 +38,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API_PS_SOUTENANCE v1");
-        c.RoutePrefix = string.Empty;  // Pour afficher Swagger à la racine
+        c.RoutePrefix = string.Empty;
     });
 }
 
-app.UseHttpsRedirection();  // Assurez-vous que HTTPS est configuré
-app.MapControllers();  // Cette ligne doit être après l'ajout des contrôleurs
+app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();

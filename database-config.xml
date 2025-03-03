@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DatabaseConfigurations>
+    <DatabaseList>
+        <DatabaseConfiguration>
+            <DatabaseAlias>base_ecole</DatabaseAlias>
+            <DatabaseType>BddSQLServer</DatabaseType>
+            <ConnectionString>Server=DESKTOP-P7VE0KJ\SQL_SERVER_EX_22;Database=base_ecole;User Id=ECOLE;Password=ECOLE;Encrypt=False;TrustServerCertificate=True;</ConnectionString>
+        </DatabaseConfiguration>
+        <DatabaseConfiguration>
+            <DatabaseAlias>BddMySql</DatabaseAlias>
+            <DatabaseType>BddMySql</DatabaseType>
+            <ConnectionString>Server=localhost;Database=ma_base_mysql;User Id=mon_utilisateur;Password=mon_mot_de_passe;</ConnectionString>
+        </DatabaseConfiguration>
+        <DatabaseConfiguration>
+            <DatabaseAlias>BddOracle</DatabaseAlias>
+            <DatabaseType>BddOracle</DatabaseType>
+            <ConnectionString>Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=mon_hôte)(PORT=mon_port))(CONNECT_DATA=(SERVICE_NAME=mon_service)));User Id=mon_utilisateur;Password=mon_mot_de_passe;</ConnectionString>
+        </DatabaseConfiguration>
+        <DatabaseConfiguration>
+            <DatabaseAlias>BddPostGreSql</DatabaseAlias>
+            <DatabaseType>BddPostGreSql</DatabaseType>
+            <ConnectionString>Server=localhost;Port=5432;Database=ma_base_postgresql;User Id=mon_utilisateur;Password=mon_mot_de_passe;</ConnectionString>
+        </DatabaseConfiguration>
+        <DatabaseConfiguration>
+            <DatabaseAlias>BddSqlLite3</DatabaseAlias>
+            <DatabaseType>BddSqlLite3</DatabaseType>
+            <ConnectionString>Data Source=mon_fichier_sqlite.db;</ConnectionString>
+        </DatabaseConfiguration>
+        <DatabaseConfiguration>
+            <DatabaseAlias>BddAccess</DatabaseAlias>
+            <DatabaseType>BddAccess</DatabaseType>
+            <ConnectionString>Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\mon_fichier_access.accdb;Persist Security Info=False;</ConnectionString>
+        </DatabaseConfiguration>
+    </DatabaseList>
+</DatabaseConfigurations>
