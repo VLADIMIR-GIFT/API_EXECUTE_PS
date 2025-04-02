@@ -1,132 +1,128 @@
 using Microsoft.AspNetCore.Mvc;
-using API_PS_SOUTENANCE.Models;
-using API_PS_SOUTENANCE.Services;
-using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
-namespace API_PS_SOUTENANCE.Controllers
+[ApiController]
+public class ProcedureController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProcedureController : ControllerBase
+    private readonly ProcedureLoader _procedureLoader;
+    private readonly JsonSerializerSettings _jsonSerializerSettings;
+    private readonly StoredProcedureRegistry _procedureRegistry;
+
+    public ProcedureController(ProcedureLoader procedureLoader, StoredProcedureRegistry procedureRegistry)
     {
-        private readonly ProcedureService _procedureService;
+        _procedureLoader = procedureLoader;
+        _procedureRegistry = procedureRegistry;
 
-        public ProcedureController(ProcedureService procedureService)
+        _jsonSerializerSettings = new JsonSerializerSettings
         {
-            _procedureService = procedureService;
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            Formatting = Formatting.Indented,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter(),
+                new TypeJsonConverter()
+            }
+        };
+    }
+
+    [HttpPost("executeProcedure")]
+    public async Task<IActionResult> ExecuteProcedure([FromBody] ProcedureRequest request)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(request.ProcedureName))
+            {
+                return BadRequest("Veuillez entrer le numéro correspondant à la procédure stockée que vous souhaitez exécuter.");
+            }
+
+            object result = null; // Initialisation de result
+
+            if (request.EnableRecordsetType)
+            {
+                result = await _procedureLoader.ExecuteProcedureAsync(
+                    request.ProcedureName,
+                    request.Parameters,
+                    request.RecordsetType
+                );
+            }
+            else
+            {
+                // Si EnableRecordsetType est false, on execute la procedure sans prendre en compte le recordsetType.
+                await _procedureLoader.ExecuteProcedureAsync(
+                    request.ProcedureName,
+                    request.Parameters,
+                    EnumTypeRecordset.DataTable // Ce paramètre n'est pas utilisé ici
+                );
+            }
+
+            // Retourner un message de succès
+            var successMessage = new { Message = "Procédure exécutée avec succès" };
+
+            // Ajouter le résultat si present
+            if (result != null)
+            {
+                var jsonResult = JsonConvert.SerializeObject(result, _jsonSerializerSettings);
+                return Ok(new { successMessage, Result = JsonConvert.DeserializeObject(jsonResult) });
+            }
+            else
+            {
+                return Ok(successMessage);
+            }
+
+        }
+        catch (Exception ex)
+        {
+            TraceErrorLine(ex);
+            return StatusCode(500, "Une erreur interne s'est produite. Consultez le fichier JournalError.txt pour plus de détails.");
+        }
+    }
+
+    private void TraceErrorLine(Exception ex)
+    {
+        string filePath = Path.Combine(Directory.GetCurrentDirectory(), "JournalError.txt");
+
+        try
+        {
+            string errorMessage = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Erreur : {ex.Message}\n" +
+                                    $"StackTrace : {ex.StackTrace}\n" +
+                                    $"------------------------------------------------------------\n";
+
+            System.IO.File.AppendAllText(filePath, errorMessage);
+        }
+        catch (Exception logEx)
+        {
+            Console.WriteLine($"Erreur lors de l'écriture du journal : {logEx.Message}");
+        }
+    }
+
+    public class TypeJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Type);
         }
 
-        [HttpPost("executer_procedure")]
-        public async Task<IActionResult> ExecuterProcedure([FromBody] JsonElement jsonData)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            try
+            if (value is Type type)
             {
-                string rawJson = jsonData.GetRawText();
-                var request = JsonSerializer.Deserialize<ProcedureRequest>(rawJson);
-
-                if (request == null)
-                {
-                    return BadRequest("Les données de la requête sont invalides.");
-                }
-
-                var dbParameters = await _procedureService.GetProcedureParametersAsync(request.ProcedureName);
-                var sqlParameters = new List<SqlParameter>();
-
-                foreach (var paramDef in dbParameters)
-                {
-                    if (request.Params.ContainsKey(paramDef.ParameterName.Replace("@", "")))
-                    {
-                        var value = request.Params[paramDef.ParameterName.Replace("@", "")];
-                        value = HandleJsonTypes(value, paramDef.SqlDbType);
-                        sqlParameters.Add(new SqlParameter(paramDef.ParameterName, value ?? DBNull.Value));
-                    }
-                    else if (paramDef.ParameterName == "@TraceErrorLigne")
-                    {
-                        // On ne fait rien ici pour @TraceErrorLigne pour l'instant
-                    }
-                    else
-                    {
-                        return BadRequest($"Le paramètre '{paramDef.ParameterName}' est manquant dans les données JSON.");
-                    }
-                }
-
-                // Exécution de la procédure
-                await _procedureService.ExecuteProcedureAsync(request.ProcedureName, sqlParameters);
-
-                // Récupération du paramètre @TraceErrorLigne
-                string traceError = null;
-                using (var connection = new SqlConnection(_procedureService.ConnectionString))
-                using (var command = new SqlCommand(request.ProcedureName, connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(sqlParameters.ToArray());
-
-                    // *** Correction cruciale : Déplacer la création et l'ajout de TraceErrorLigne ici ***
-                    var traceErrorParam = new SqlParameter("@TraceErrorLigne", SqlDbType.VarChar, 8000); // Pas de using ici
-                    traceErrorParam.Direction = ParameterDirection.Output;
-                    command.Parameters.Add(traceErrorParam); // Ajout de TraceErrorLigne APRÈS l'appel à ExecuteProcedureAsync
-
-                    await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
-
-                    traceError = traceErrorParam.Value?.ToString();
-                } // Fin du bloc using pour command et connection
-
-
-                if (!string.IsNullOrEmpty(traceError))
-                {
-                    return BadRequest($"Erreur lors de l'exécution de la procédure : {traceError}");
-                }
-
-                return Ok("Procédure exécutée avec succès");
+                writer.WriteValue(type.AssemblyQualifiedName);
             }
-            catch (JsonException ex)
+            else
             {
-                return BadRequest($"Erreur de désérialisation JSON: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erreur: {ex.Message}");
+                writer.WriteNull();
             }
         }
 
-        private object HandleJsonTypes(object value, SqlDbType sqlDbType)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (value == null)
-                return DBNull.Value;
-
-            if (value.GetType().Name == "JsonElement")
-            {
-                JsonElement jsonElement = (JsonElement)value;
-
-                switch (jsonElement.ValueKind)
-                {
-                    case JsonValueKind.Number:
-                        if (sqlDbType == SqlDbType.Int) return jsonElement.GetInt32();
-                        if (sqlDbType == SqlDbType.Decimal) return jsonElement.GetDecimal();
-                        if (sqlDbType == SqlDbType.BigInt) return jsonElement.GetInt64();
-                        if (sqlDbType == SqlDbType.Float) return jsonElement.GetDouble();
-                        break;
-                    case JsonValueKind.String:
-                        return jsonElement.GetString();
-                    case JsonValueKind.True:
-                    case JsonValueKind.False:
-                        return jsonElement.GetBoolean();
-                    case JsonValueKind.Null:
-                        return DBNull.Value;
-                    case JsonValueKind.Object:
-                    case JsonValueKind.Array:
-                        return jsonElement.ToString();
-                    default:
-                        throw new JsonException($"Type de données JSON non pris en charge: {jsonElement.ValueKind}");
-                }
-            }
-            return value;
+            string typeName = reader.Value as string;
+            return typeName != null ? Type.GetType(typeName) : null;
         }
     }
 }

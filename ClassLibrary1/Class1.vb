@@ -1,0 +1,652 @@
+﻿Imports Microsoft.VisualBasic
+
+Public Class Class1
+    Public Enum EnumTypeDatabase
+        BddAccess = 0
+        BddSQLServer = 1
+        BddOracle = 2
+        BddExcel = 3
+        BddMySql = 4
+        BddFireBird = 5
+        BddPostGreSql = 6
+        BddSqlLite3 = 7
+    End Enum
+-----------------------------------------------
+ Public Enum EnumTypeRecordset
+        DataReader = 0
+        DataTable = 1
+        DataSet = 2
+        DataJson = 3
+        DataXml = 4
+    End Enum
+-----------------------------------------------
+ Public Enum ModeDeConnection
+        ByServerName = 0
+        ByIp = 1
+    End Enum
+----------------------------------------------
+ Public Enum EnumOperationMaj
+        NoneMaj = 0
+        NewMaj = 1
+        EditMaj = 2
+        Delete = 3
+    End Enum
+--------------------------------------------------------------
+Public Class DatabaseSettings
+
+        Public TypeBase As Integer
+        Public NomBase As String
+        Public Password As String
+        Public User As String
+        Public PathBase As String
+        Public TypeConnection As Byte
+        Public Server As String
+        Public modeConnection As Byte
+        Public cmdTimeOut As Integer
+        Public baseParam As String
+
+
+        Public Function FConnection() As DbConnection
+
+            Dim objConnection As DbConnection
+            Dim dbFactory As DbProviderFactory
+
+
+            dbFactory = Helper.FConnectionFactory(DirectCast(TypeBase, GlobalConstants.EnumTypeDatabase))
+            objConnection = dbFactory.CreateConnection()
+            objConnection.ConnectionString = FConnectionString()
+
+            Return objConnection
+
+        End Function
+
+
+
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function FConnectionString()
+            Select Case TypeBase
+                Case GlobalConstants.EnumTypeDatabase.Access
+                    Select Case TypeConnection
+
+                        Case 1
+                            Return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & PathBase & "\" & NomBase & ".mdb" & ";Jet OLEDB:Database Password=" & Password & ""
+                        Case 2
+                            Return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & PathBase & "\" & NomBase & ".mdb" & ";User Id=admin;Password=;"
+                        Case 3
+                            Return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & PathBase & "\" & NomBase & ".mdb" & ";Jet OLEDB:System Database=system.mdw;"
+                        Case 4
+                            Return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & PathBase & "\" & NomBase & ".mdb" & ";Jet OLEDB:System Database=system.mdw;User ID=" & User & ";Password=" & Password & ";"
+                    End Select
+
+                Case GlobalConstants.EnumTypeDatabase.SQLServer
+                    Return "Data Source=" & Server & ";Initial Catalog=" & NomBase & ";User ID=" & User & ";pwd=" & Password
+
+                Case GlobalConstants.EnumTypeDatabase.Oracle
+                    Return String.Format("Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST={0})(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME={1})));User Id={2};Password={3};", Server, NomBase, User, Password)
+                'Return String.Format("user id={0};password={1};data source={2};", User, Password, NomBase)
+                'Return "Provider=msdaora;Data Source=" & NomBase & ";User Id=" & User & ";Password=" & Password & ";"
+
+                Case GlobalConstants.EnumTypeDatabase.Excel
+                    Return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & PathBase & "\" & NomBase & ";Extended Properties=Excel 8.0;"
+            End Select
+            Return Nothing
+        End Function
+    End Class
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Public Class Helper
+
+
+        ''' <summary>
+        ''' Représente le DbProviderFactory relatif au type de base de données
+        ''' </summary>
+        ''' <remarks></remarks>
+        Private Shared ConnectionFactory As DbProviderFactory
+
+
+
+        ''' <summary>
+        '''Retourne le DbProviderFactory relatif au type de base de données
+        ''' </summary>
+        ''' <param name="TypeBase"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function FConnectionFactory(ByVal TypeBase As GlobalConstants.EnumTypeDatabase) As DbProviderFactory
+
+            Select Case TypeBase
+                Case GlobalConstants.EnumTypeDatabase.Access, GlobalConstants.EnumTypeDatabase.Excel
+                    ConnectionFactory = DbProviderFactories.GetFactory("System.Data.OleDb")
+                Case GlobalConstants.EnumTypeDatabase.SQLServer
+                    ConnectionFactory = DbProviderFactories.GetFactory("System.Data.SqlClient")
+                Case GlobalConstants.EnumTypeDatabase.Oracle
+                    'ConnectionFactory = DbProviderFactories.GetFactory("System.Data.OracleClient")
+                    ConnectionFactory = DbProviderFactories.GetFactory("Oracle.DataAccess.Client")
+            End Select
+            Return ConnectionFactory
+
+        End Function
+
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <remarks></remarks>
+        Private Shared CommandBuilder As DbCommandBuilder
+        Public Shared ReadOnly Property FCommandBuilder() As DbCommandBuilder
+            Get
+                If CommandBuilder Is Nothing Then
+                    CommandBuilder = ConnectionFactory.CreateCommandBuilder
+                End If
+                Return CommandBuilder
+            End Get
+        End Property
+
+
+        Public Function GetNewTransaction() As Common.DbTransaction
+
+            Return RequestManager.GetNewTransaction()
+
+        End Function
+
+        'Public Function GetNewTransactionChild() As TransactionChild
+        '    Return RequestManager.GetNewTransactionChild()
+        'End Function
+        ''' <summary>
+        ''' retourne une connexion
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Friend Shared Function GetNewConnection(Optional ByVal maintenance As Boolean = False, Optional ByVal objetConfig As ShaderConfig = Nothing) As DbConnection
+
+            Dim instDbInfo As DatabaseSettings
+            instDbInfo = DatabaseSettingsLoader.LoadData(maintenance, objetConfig)
+            Return instDbInfo.FConnection()
+        End Function
+
+        ''' <summary>
+        ''' 
+        ''' </summary>
+        ''' <param name="TextCommand"></param>
+        ''' <param name="TypeCommand"></param>
+        ''' <param name="ParamterValues"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+
+
+
+        ''' <summary>
+        ''' Retourne un dataset relatif à une commande 
+        ''' </summary>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function FDataSet(ByRef ActiveCommand As DbCommand) As DataSet
+
+            Dim objDataAdapter As DbDataAdapter, ObjDataSet As New DataSet
+
+            objDataAdapter = ConnectionFactory.CreateDataAdapter()
+            objDataAdapter.SelectCommand = ActiveCommand
+            objDataAdapter.Fill(ObjDataSet)
+            Return ObjDataSet
+
+        End Function
+
+        ''' <summary>
+        ''' Retourne un datatable relatif à une commande
+        ''' </summary>
+        ''' <param name="ActiveCommand"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Shared Function FDataTable(ByRef ActiveCommand As DbCommand) As DataTable
+
+            Dim ObjDataAdapter As DbDataAdapter, ObjDataTable As New DataTable
+
+            ObjDataAdapter = ConnectionFactory.CreateDataAdapter()
+            ObjDataAdapter.SelectCommand = ActiveCommand
+            ObjDataAdapter.Fill(ObjDataTable)
+            Return ObjDataTable
+
+        End Function
+
+    End Class
+
+
+----------------------------------------------------------------------------------------
+Imports System.Runtime.Serialization.Formatters.Binary
+    Imports System.IO
+    Imports System.Xml.Serialization
+    Imports SeriPwd
+
+
+    <XmlRootAttribute("ParametreBDD")>
+    <System.Serializable()>
+    Public Class ShaderConfig
+
+        Public TypeBDD As String
+        Public ServeurBDD As String
+        Public FournisseurBDD As String
+        Public PwdBDD As String
+        Public UtilisateurBDD As String
+        Public NomBDD As String
+        Public ImageBDD As String
+        Public EtatBDD As String
+        Public LangueBDD As String
+        Public CheminBDD As String
+        Public TypeConnectionBDD As String
+        Public CouleurBDD As String
+        Public PosteBDD As String
+        Public ModeConnectionBDD As String
+        Public IpServeurBDD As String
+        Public Authentification As String
+        Public cmdTimeOutBDD As String
+        Public FichierCrypter As Boolean
+
+
+        Public ServeurTransfert As String
+        Public IpServeurTransfert As String
+        Public BaseTransfert As String
+        Private TempsInactivite As String
+        Public BaseParam As String
+        Public DosErreurs As String
+        Public Societe As String
+        '--------------------------------------------------
+
+        <XmlIgnoreAttribute()>
+        Public SecurityEnabled As Boolean
+        Private Shared _decrypt As MyTruck
+
+        Public Sub New()
+            SecurityEnabled = False
+        End Sub
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property BaseParamClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, BaseParam)
+                Else
+                    Return BaseParam
+                End If
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property ServeurTransfertClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, ServeurTransfert)
+                Else
+                    Return ServeurTransfert
+                End If
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property IpServeurTransfertClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, IpServeurTransfert)
+                Else
+                    Return IpServeurTransfert
+                End If
+
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property BaseTransfertClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, BaseTransfert)
+                Else
+                    Return BaseTransfert
+                End If
+            End Get
+        End Property
+
+
+        <XmlIgnoreAttribute()>
+        Public Shared ReadOnly Property Decrypt() As MyTruck
+            Get
+                If (_decrypt Is Nothing) Then
+                    _decrypt = New MyTruck()
+                End If
+                Return _decrypt
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property TypeBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, TypeBDD)
+                Else
+                    Return TypeBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property ServeurBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, ServeurBDD)
+                Else
+                    Return ServeurBDD
+
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property FournisseurBDDClear() As String
+            Get
+
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, FournisseurBDD)
+                Else
+                    Return FournisseurBDD
+                End If
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property PwdBDDClear() As String
+            Get
+
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, PwdBDD)
+                Else
+                    Return PwdBDD
+                End If
+
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property UtilisateurBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, UtilisateurBDD)
+                Else
+                    Return UtilisateurBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property NomBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, NomBDD)
+                Else
+                    Return NomBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property ImageBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, ImageBDD)
+                Else
+                    Return ImageBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property EtatBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, EtatBDD)
+                Else
+                    Return EtatBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property LangueBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, LangueBDD)
+                Else
+                    Return (LangueBDD)
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property CheminBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, CheminBDD)
+                Else
+                    Return CheminBDD
+                End If
+
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property TypeConnectionBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, TypeConnectionBDD)
+                Else
+                    Return TypeConnectionBDD
+                End If
+
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property CouleurBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, CouleurBDD)
+                Else
+                    Return CouleurBDD
+                End If
+
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property PosteBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, PosteBDD)
+                Else
+                    Return PosteBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property IpServeurBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, IpServeurBDD)
+                Else
+                    Return IpServeurBDD
+                End If
+
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property ModeConnectionBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, ModeConnectionBDD)
+                Else
+                    Return ModeConnectionBDD
+                End If
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property FichierCrypterClear() As Boolean
+            Get
+                Return CBool(FichierCrypter)
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property cmdTimeOutBDDClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, cmdTimeOutBDD)
+                Else
+                    Return cmdTimeOutBDD
+                End If
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property AuthentificationClear() As String
+            Get
+                If (SecurityEnabled) Then
+
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, Authentification)
+                Else
+                    Return Authentification
+                End If
+            End Get
+        End Property
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property TempsInactiviteClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, TempsInactivite)
+                Else
+                    Return TempsInactivite
+                End If
+            End Get
+        End Property
+
+
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property DosErreursClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, DosErreurs)
+                Else
+                    Return DosErreurs
+                End If
+            End Get
+        End Property
+        <XmlIgnoreAttribute()>
+        Public ReadOnly Property SocieteClear() As String
+            Get
+                If (SecurityEnabled) Then
+                    Return Decrypt.E0125_02A(GlobalConstants.CRYPTKEY, Societe)
+                Else
+                    Return Societe
+                End If
+            End Get
+        End Property
+        '------------------------------------------------------------------------
+    End Class
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+<?xml version="1.0" encoding="utf-8"?>
+<ParametreBDD>
+    <TypeBDD>1</TypeBDD>
+  <ServeurBDD> ELY\SQL_E_2019</ServeurBDD>
+  <FournisseurBDD> SQLOLEDB</FournisseurBDD>
+  <PwdBDD>0000</PwdBDD>
+  <UtilisateurBDD>0000</UtilisateurBDD> 
+  <NomBDD> BIM_SRS</NomBDD>     
+  <ImageBDD> LISTEIMAGES</ImageBDD>
+  <EtatBDD> D : \NOUVEAU_PC\DOT_NET_PROJECTS\Repo_SRS_2022\05 Developpement\01 Sources\BCE\BCE\Etats\Etats.xml</EtatBDD>
+  <EtatBDDCRystal> D : \NOUVEAU_PC\DOT_NET_PROJECTS\Repo_SRS_2022\05 Developpement\01 Sources\BCE\BCE\Etats</EtatBDDCRystal>
+  <LangueBDD> Français</LangueBDD> 
+  <CheminBDD></CheminBDD>
+  <TypeConnectionBDD>1</TypeConnectionBDD>
+  <CouleurBDD></CouleurBDD>
+  <PosteBDD>1</PosteBDD>
+  <ModeConnectionBDD>0</ModeConnectionBDD>  
+  <IpServeurBDD></IpServeurBDD>
+  <Authentification>1</Authentification>
+  <cmdTimeOutBDD>0</cmdTimeOutBDD>
+  <FichierCrypter>0</FichierCrypter>
+  <ServeurTransfert>127.0.0.1</ServeurTransfert> 
+  <IpServeurTransfert></IpServeurTransfert>
+  <BaseTransfert></BaseTransfert>
+  <BaseParam></BaseParam>
+  <Theme>0</Theme>
+  <DosErreurs> D : \NOUVEAU_PC\DOT_NET_PROJECTS\IRS_ERREURS_LOGICIEL</DosErreurs>
+  <CheminBDDComptaBasia></CheminBDDComptaBasia>
+  <TypeBDDCOMPTA>1</TypeBDDCOMPTA>
+  <NomBaseBasia> CPTA_PARAM</NomBaseBasia>
+  <PasswordBasia>0000</PasswordBasia>
+  <ServerParam></ServerParam>
+  <UtilisateurParam>0000</UtilisateurParam>
+  <PwdParam>0000</PwdParam>
+<Theme>0</Theme>
+  <DOS_ENVOI_DONNEES> C : \MECEF\FACTURES</DOS_ENVOI_DONNEES>
+  <DOS_RECEPTION_DONNEES> C : \BASIA\GRIMALDI\home\INVOICES</DOS_RECEPTION_DONNEES>
+  <DOS_ARCHIVAGE> C : \BASIA\GRIMALDI\home\ARCHIVAGES</DOS_ARCHIVAGE>
+  <PREFIXE_FICHIER_TEXTE> BeninInvoice</PREFIXE_FICHIER_TEXTE>
+  <PREFIXE_FICHIER_BALISE> FAC_</PREFIXE_FICHIER_BALISE>
+  <PREFIXE_FICHIER_REPONSE> MCF_FAC_</PREFIXE_FICHIER_REPONSE>
+  <DOS_INTERNET> C : \MECEF\INTERNET</DOS_INTERNET>
+  <DOS_RECEPTION_ERREURS> C : \BASIA\GRIMALDI\home\ERREURS</DOS_RECEPTION_ERREURS>
+  <SEND_PNG>False</SEND_PNG> <!--CONTROLE L'ENVOIE DU FICHIER IMAGE DU CODE QR--> 
+  <LASOCIETE> XXXX</LASOCIETE>
+  <delaiAttenteTransfertRap>0.1</delaiAttenteTransfertRap>
+  <delaiAttenteTransfertAcc>0.1</delaiAttenteTransfertAcc>
+  <delaiAttenteTransfertAutres>0.1</delaiAttenteTransfertAutres>
+  <heureTransfertDonnees>08/02/2012 16:47:00</heureTransfertDonnees>
+  <dureeGestionTransfert>0.1</dureeGestionTransfert>
+  <periodeCheckingTransfert>0.1</periodeCheckingTransfert>
+  <modeRelance>2</modeRelance> <!-- 0=Aucune relance 1= sequentiel,2=Alterner -->
+  <periodeCheckingRelance>0.1</periodeCheckingRelance>
+  <dureeGestionRelance>0.1</dureeGestionRelance>
+  <heureRelance>09/02/2012 07:00:00</heureRelance>
+  <traiterManuelTsfrt>False</traiterManuelTsfrt>
+  <dateformat> dmy</dateformat>
+</ParametreBDD>
+-------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
+Public Enum StoredProcedures
+
+        PS_REMPLIR_COMBO_EXERCICE
+        PS_REMPLIR_ZONE_DE_TEXTE
+        PS_REMPLIR_LIGNE_TABLEAU
+        PS_REMPLIR_COLONNE_TABLEAU
+        PS_REMPLIR_VARIABLE_FORMULE_TABLEAU
+        PS_FORMULE_TABLEAU_PARAM_ELEMENT
+    End Enum
+
+
+    Public Enum StoredProcedures_Divers
+
+        'MODULE DE CHARGEMENT ------------------------------------------
+        PS_BCE_CHARGER_BASE = 99000
+        PS_BCE_CHARGER_DOSSIER = 99001
+        PS_BCE_NUMERO_EXERCICE = 99002
+        PS_BCE_CHARGER_BROUILLARD = 99003
+
+    End Enum
+
+End Class

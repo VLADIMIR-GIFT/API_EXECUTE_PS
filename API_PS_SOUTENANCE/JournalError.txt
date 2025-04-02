@@ -1,0 +1,226 @@
+[2025-02-27 11:29:36] Erreur : Le paramètre @TraceErrorLigne est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 59
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 25
+------------------------------------------------------------
+[2025-02-27 11:50:11] Erreur : Le paramètre @TraceErrorLigne est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 59
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 25
+------------------------------------------------------------
+[2025-02-27 11:55:39] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 12:00:44] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 12:43:20] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-02-27 13:02:14] Erreur : Serialization and deserialization of 'System.Type' instances is not supported. Path: $.Tables.Columns.DataType.
+StackTrace :    at System.Text.Json.ThrowHelper.ThrowNotSupportedException(WriteStack& state, Exception innerException)
+   at System.Text.Json.Serialization.JsonConverter`1.WriteCore(Utf8JsonWriter writer, T& value, JsonSerializerOptions options, WriteStack& state)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.SerializeAsObject(Utf8JsonWriter writer, Object rootValue)
+   at System.Text.Json.Serialization.Metadata.JsonTypeInfo`1.Serialize(Utf8JsonWriter writer, T& rootValue, Object rootValueBoxed)
+   at System.Text.Json.JsonSerializer.WriteString[TValue](TValue& value, JsonTypeInfo`1 jsonTypeInfo)
+   at System.Text.Json.JsonSerializer.Serialize[TValue](TValue value, JsonSerializerOptions options)
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 43
+------------------------------------------------------------
+[2025-03-02 00:10:45] Erreur : Type de recordset non pris en charge.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 75
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 39
+------------------------------------------------------------
+[2025-03-03 22:24:33] Erreur : Configuration de la base de données introuvable pour l'alias ''.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String databaseAlias, String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 25
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 41
+------------------------------------------------------------
+[2025-03-04 17:51:15] Erreur : Configuration de la base de données introuvable pour l'alias 'BddSQLServer'.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 63
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 44
+------------------------------------------------------------
+[2025-03-04 17:57:23] Erreur : Configuration de la base de données introuvable pour l'alias 'BddSQLServer'.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 63
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 44
+------------------------------------------------------------
+[2025-03-04 17:57:24] Erreur : Configuration de la base de données introuvable pour l'alias 'BddSQLServer'.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 63
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 44
+------------------------------------------------------------
+[2025-03-05 19:13:26] Erreur : Procédure stockée 'dbo.PS_SELECT_AFFICHE_GRILLE_INBOUND_OUTBOUND_UN_ETAT' introuvable.
+StackTrace :    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at ProcedureLoader.<>c__DisplayClass5_1.<ExecuteDataTableAsync>b__0() in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 128
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at ProcedureLoader.ExecuteDataTableAsync(SqlCommand command) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 128
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 109
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 56
+------------------------------------------------------------
+[2025-03-05 19:23:37] Erreur : Procédure stockée 'dbo.PS_SELECT_AFFICHE_GRILLE_INBOUND_OUTBOUND_UN_ETAT' introuvable.
+StackTrace :    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at ProcedureLoader.<>c__DisplayClass7_1.<ExecuteDataSetAsync>b__0() in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at ProcedureLoader.ExecuteDataSetAsync(SqlCommand command) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 111
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-05 19:24:40] Erreur : Procédure stockée 'PS_SELECT_AFFICHE_GRILLE_INBOUND_OUTBOUND_UN_ETAT' introuvable.
+StackTrace :    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at ProcedureLoader.<>c__DisplayClass7_1.<ExecuteDataSetAsync>b__0() in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at ProcedureLoader.ExecuteDataSetAsync(SqlCommand command) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 111
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-05 19:29:10] Erreur : Procédure stockée 'dbo.PS_SELECT_AFFICHE_GRILLE_INBOUND_OUTBOUND_UN_ETAT' introuvable.
+StackTrace :    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at ProcedureLoader.<>c__DisplayClass7_1.<ExecuteDataSetAsync>b__0() in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at ProcedureLoader.ExecuteDataSetAsync(SqlCommand command) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 155
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 111
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-06 01:50:23] Erreur : Le paramètre @P_PARTENAIRE est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 101
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-09 09:41:20] Erreur : Erreur de conversion du paramètre 1 vers Int: The requested operation requires an element of type 'Number', but the target element has type 'String'.
+StackTrace :    at ProcedureLoader.ConvertJsonElement(JsonElement element, SqlDbType dbType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 209
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 94
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-09 09:55:06] Erreur : Erreur de conversion du paramètre 1 vers Int: The requested operation requires an element of type 'Number', but the target element has type 'String'.
+StackTrace :    at ProcedureLoader.ConvertJsonElement(JsonElement element, SqlDbType dbType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 209
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 94
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-09 11:27:27] Erreur : Le paramètre @TraceErrorLigne est manquant dans les données JSON.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 101
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-10 09:41:58] Erreur : La procédure ou fonction 'PS_SELECT_AFFICHE_GRILLE_INBOUND_OUTBOUND_UN_ETAT' attend le paramètre '@P_PARTENAIRE', qui n'a pas été fourni.
+StackTrace :    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at Microsoft.Data.SqlClient.SqlDataReader.get_MetaData()
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean isAsync, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataSet dataSet)
+   at ProcedureLoader.<>c__DisplayClass7_1.<ExecuteDataSetAsync>b__0() in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 171
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at ProcedureLoader.ExecuteDataSetAsync(SqlCommand command) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 171
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 111
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
+[2025-03-10 18:13:11] Erreur : Erreur de conversion du paramètre  vers Date: One of the identified items was in an invalid format.
+StackTrace :    at ProcedureLoader.ConvertJsonElement(JsonElement element, SqlDbType dbType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 215
+   at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 95
+   at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
+------------------------------------------------------------
