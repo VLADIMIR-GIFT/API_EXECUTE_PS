@@ -1,7 +1,7 @@
-using System.Xml.Serialization;
-using System.IO;
 using System;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 
@@ -9,11 +9,15 @@ public class XmlConfigurationService
 {
     private DatabaseConfigurations _configurations;
 
-    
-
     public XmlConfigurationService(IWebHostEnvironment env)
     {
         var filePath = Path.Combine(env.ContentRootPath, "database-config.xml");
+
+        // Vérifie si le fichier existe avant de le charger
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"Le fichier de configuration XML est introuvable à l'emplacement : {filePath}");
+        }
 
         try
         {
