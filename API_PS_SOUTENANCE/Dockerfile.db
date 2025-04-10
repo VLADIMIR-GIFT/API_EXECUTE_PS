@@ -1,0 +1,32 @@
+# Image de base SQL Server
+FROM mcr.microsoft.com/mssql/server:latest
+
+# Passer à l'utilisateur root pour les installations
+USER root
+
+# Étape 1 : Mise à jour des paquets
+RUN apt-get update || { echo "apt-get update failed"; exit 1; }
+
+# Étape 2 : Installation des dépendances
+RUN apt-get install -y curl gnupg apt-transport-https || { echo "install dependencies failed"; exit 1; }
+
+# Étape 3 : Ajout de la clé Microsoft
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - || { echo "curl key failed"; exit 1; }
+
+# Étape 4 : Ajout du dépôt (ajustez la version si nécessaire)
+RUN curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list || { echo "curl config failed"; exit 1; }
+
+# Étape 5 : Mise à jour après ajout du dépôt
+RUN apt-get update || { echo "second apt-get update failed"; exit 1; }
+
+# Étape 6 : Installation de mssql-tools
+RUN ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev || { echo "install mssql-tools failed"; exit 1; }
+
+# Étape 7 : Nettoyage
+RUN rm -rf /var/lib/apt/lists/*
+
+# Ajouter les outils au PATH
+ENV PATH="$PATH:/opt/mssql-tools/bin"
+
+# Revenir à l'utilisateur mssql pour exécuter SQL Server
+USER mssql

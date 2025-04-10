@@ -15,13 +15,10 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 
 # Copier l'application compilée
-COPY --from=build-env /app/out . 
+COPY --from=build-env /app/out .
 
-# Copier le fichier de configuration (vérifie bien qu'il est dans le bon dossier)
-COPY database-config.xml /app/database-config.xml
-
-# Exposer le bon port
-EXPOSE 5000
+# Exposer le port (aligné avec docker-compose)
+EXPOSE 3000
 
 # Lancer l'application
 ENTRYPOINT ["dotnet", "API_PS_SOUTENANCE.dll"]

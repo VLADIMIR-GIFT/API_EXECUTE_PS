@@ -14,6 +14,8 @@ services:
       - DB_PASSWORD=ECOLE
     depends_on:
       - db
+    volumes:
+      - ./database-config.xml:/app/database-config.xml  
     networks:
       - app_network
 
