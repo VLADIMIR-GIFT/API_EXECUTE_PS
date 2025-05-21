@@ -224,3 +224,15 @@ StackTrace :    at ProcedureLoader.ConvertJsonElement(JsonElement element, SqlDb
    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\ProcedureLoader.cs:line 95
    at ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_PS_SOUTENANCE\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 47
 ------------------------------------------------------------
+[2025-05-21 13:12:21] Erreur : Impossible de dériver les paramètres pour la procédure 'PS_ACTION_TB_E_CLASS'. Vérifiez les permissions ou si la procédure existe.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\ProcedureLoader.cs:line 88
+   at API_PS_SOUTENANCE.Controllers.ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 60
+------------------------------------------------------------
+[2025-05-21 13:14:49] Erreur : Impossible de dériver les paramètres pour la procédure 'PS_ACTION_TB_E_CLASS'. Vérifiez les permissions ou si la procédure existe.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\ProcedureLoader.cs:line 88
+   at API_PS_SOUTENANCE.Controllers.ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 60
+------------------------------------------------------------
+[2025-05-21 13:18:16] Erreur : Impossible de dériver les paramètres pour la procédure 'PS_ACTION_TB_E_CLASS'. Vérifiez les permissions ou si la procédure existe.
+StackTrace :    at ProcedureLoader.ExecuteProcedureAsync(String procedureName, Dictionary`2 parameters, EnumTypeRecordset recordsetType) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\ProcedureLoader.cs:line 88
+   at API_PS_SOUTENANCE.Controllers.ProcedureController.ExecuteProcedure(ProcedureRequest request) in E:\API_BASIA\API_EXECUTE_PS\API_PS_SOUTENANCE\Controllers\ProcedureController.cs:line 60
+------------------------------------------------------------

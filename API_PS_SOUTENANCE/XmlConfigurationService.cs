@@ -1,76 +1,80 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
-using Microsoft.AspNetCore.Hosting;
-using System.Collections.Generic;
+using System.Xml.Linq; // <-- Ceci est ce qui est nécessaire pour XDocument
+using Microsoft.Data.SqlClient;
 
 public class XmlConfigurationService
 {
-    private DatabaseConfigurations _configurations;
+    private XDocument _document;
+    private string _configFilePath;
 
-    public XmlConfigurationService(IWebHostEnvironment env)
+    public XmlConfigurationService(string configFilePath)
     {
-        var filePath = Path.Combine(env.ContentRootPath, "database-config.xml");
+        _configFilePath = configFilePath;
+        LoadConfiguration();
+    }
 
-        // Vérifie si le fichier existe avant de le charger
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException($"Le fichier de configuration XML est introuvable à l'emplacement : {filePath}");
-        }
-
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(DatabaseConfigurations));
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-            {
-                _configurations = (DatabaseConfigurations)serializer.Deserialize(fileStream);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Erreur lors du chargement de la configuration XML : {ex.Message}");
-            _configurations = new DatabaseConfigurations();
-        }
+    private void LoadConfiguration()
+    {
+        _document = XDocument.Load(_configFilePath);
     }
 
     public DatabaseConfiguration GetDatabaseConfiguration(string databaseAlias)
     {
-        return _configurations.DatabaseList.FirstOrDefault(c => c.DatabaseAlias == databaseAlias);
+        var configElement = _document.Descendants("DatabaseConfiguration")
+                                     .FirstOrDefault(e => e.Element("DatabaseAlias")?.Value == databaseAlias);
+
+        if (configElement != null)
+        {
+            return new DatabaseConfiguration
+            {
+                DatabaseAlias = configElement.Element("DatabaseAlias")?.Value,
+                DatabaseType = configElement.Element("DatabaseType")?.Value,
+                ConnectionString = configElement.Element("ConnectionString")?.Value
+            };
+        }
+        return null;
     }
 
+    // NOUVELLE MÉTHODE À AJOUTER
     public string GetConnectionString(string databaseAlias)
     {
-        var config = GetDatabaseConfiguration(databaseAlias);
-        return config?.ConnectionString;
+        return GetDatabaseConfiguration(databaseAlias)?.ConnectionString;
     }
 
-    public string GetDefaultDatabaseAlias()
+    // NOUVELLE MÉTHODE À AJOUTER
+    public string GetDatabaseNameFromConnectionString(string connectionString)
     {
-        if (_configurations.DatabaseList != null && _configurations.DatabaseList.Any())
+        if (string.IsNullOrEmpty(connectionString))
         {
-            return _configurations.DatabaseList.FirstOrDefault()?.DatabaseAlias;
+            return null;
         }
-        else
+
+        try
         {
+            var builder = new SqlConnectionStringBuilder(connectionString);
+            return builder.InitialCatalog; // C'est la propriété 'Database' dans la chaîne de connexion
+        }
+        catch (ArgumentException)
+        {
+            // Gérer les chaînes de connexion invalides si nécessaire
             return null;
         }
     }
 
-    public List<DatabaseConfiguration> GetDatabaseConfigurations()
+    // NOUVELLE MÉTHODE À AJOUTER
+    public string GetDefaultDatabaseAlias()
     {
-        return _configurations.DatabaseList;
+        // Supposons que le premier alias est le défaut si non spécifié
+        return _document.Descendants("DatabaseConfiguration")
+                       .FirstOrDefault()
+                       ?.Element("DatabaseAlias")?.Value;
     }
 }
 
-[XmlRoot("DatabaseConfigurations")]
-public class DatabaseConfigurations
-{
-    [XmlArray("DatabaseList")]
-    [XmlArrayItem("DatabaseConfiguration")]
-    public List<DatabaseConfiguration> DatabaseList { get; set; } = new List<DatabaseConfiguration>();
-}
-
+// Assurez-vous que cette classe existe. Si elle est déjà définie ailleurs, ne la copiez pas deux fois.
 public class DatabaseConfiguration
 {
     public string DatabaseAlias { get; set; }

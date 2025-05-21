@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "I++VxkYUCkE=",
+  "dgSpecHash": "WThANkxkENo=",
   "success": true,
-  "projectFilePath": "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
+  "projectFilePath": "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cooperations office\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\cooperations office\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

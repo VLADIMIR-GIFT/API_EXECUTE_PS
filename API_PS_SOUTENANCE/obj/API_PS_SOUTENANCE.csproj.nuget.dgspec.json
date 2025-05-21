@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj": {}
+    "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj": {}
   },
   "projects": {
-    "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj": {
+    "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
+        "projectUniqueName": "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
         "projectName": "API_PS_SOUTENANCE",
-        "projectPath": "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
+        "projectPath": "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE.csproj",
         "packagesPath": "C:\\Users\\cooperations office\\.nuget\\packages\\",
-        "outputPath": "E:\\API_PS_SOUTENANCE\\API_PS_SOUTENANCE\\obj\\",
+        "outputPath": "E:\\API_BASIA\\API_EXECUTE_PS\\API_PS_SOUTENANCE\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\cooperations office\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\cooperations office\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

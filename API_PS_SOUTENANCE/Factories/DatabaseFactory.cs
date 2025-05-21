@@ -6,13 +6,15 @@ using Microsoft.Data.Sqlite; // Pour SQLite
 using Microsoft.Data.SqlClient;
 using Npgsql; // Pour PostgreSQL
 using System.Data.OleDb;//pour Access
+using System; 
 public class DatabaseFactory
+
 {
     public static IDbConnection CreateConnection(EnumTypeDatabase typeDatabase, string connectionString)
     {
         return typeDatabase switch
         {
-            EnumTypeDatabase.GRIM_EMECEF_2025 => new SqlConnection(connectionString),
+            EnumTypeDatabase.SqlServer => new SqlConnection(connectionString),
             EnumTypeDatabase.BddMySql => new MySqlConnection(connectionString),
             EnumTypeDatabase.BddPostGreSql => new NpgsqlConnection(connectionString),
             EnumTypeDatabase.BddOracle => new OracleConnection(connectionString),

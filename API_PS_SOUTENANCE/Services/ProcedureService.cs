@@ -9,16 +9,26 @@ namespace API_PS_SOUTENANCE.Services
     public class ProcedureService
     {
         private readonly string _connectionString;
+        private readonly string _databaseName; // Nouvelle variable pour le nom de la base de données
+        private readonly XmlConfigurationService _configService; // Nouvelle injection de service
 
-        // Constructeur pour initialiser la chaîne de connexion
-        public ProcedureService(string connectionString)
+        // MODIFIER LE CONSTRUCTEUR
+        public ProcedureService(string connectionString, XmlConfigurationService configService)
         {
             _connectionString = connectionString;
+            _configService = configService;
+            // Extrait le nom de la base de données de la chaîne de connexion
+            _databaseName = _configService.GetDatabaseNameFromConnectionString(connectionString);
+
+            if (string.IsNullOrEmpty(_databaseName))
+            {
+                throw new ArgumentException("Impossible d'extraire le nom de la base de données de la chaîne de connexion.", nameof(connectionString));
+            }
         }
 
         public string ConnectionString => _connectionString;
 
-        // Récupérer toutes les procédures stockées dans la base "base_ecole"
+        // MODIFIER CETTE MÉTHODE
         public async Task<List<string>> GetStoredProceduresAsync()
         {
             var procedures = new List<string>();
@@ -26,11 +36,12 @@ namespace API_PS_SOUTENANCE.Services
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = @"SELECT routine_name
-                              FROM information_schema.routines
-                              WHERE routine_type = 'PROCEDURE' 
-                              AND routine_catalog = 'GRIM_EMECEF_2025'
-                              AND routine_schema = 'dbo'";
+                // Remplacer 'GRIM_EMECEF_2025' par la variable dynamique _databaseName
+                var query = $@"SELECT routine_name
+                                 FROM information_schema.routines
+                                 WHERE routine_type = 'PROCEDURE'
+                                 AND routine_catalog = '{_databaseName}'
+                                 AND routine_schema = 'dbo'";
 
                 var command = new SqlCommand(query, connection);
 
@@ -46,7 +57,7 @@ namespace API_PS_SOUTENANCE.Services
             return procedures;
         }
 
-        // Récupérer les paramètres d'une procédure stockée donnée
+        // MODIFIER CETTE MÉTHODE
         public async Task<List<SqlParameter>> GetProcedureParametersAsync(string procedureName)
         {
             var parameters = new List<SqlParameter>();
@@ -54,11 +65,12 @@ namespace API_PS_SOUTENANCE.Services
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                var query = @"SELECT parameter_name, data_type
-                              FROM information_schema.parameters
-                              WHERE specific_name = @ProcedureName
-                              AND specific_catalog = 'GRIM_EMECEF_2025'
-                              AND specific_schema = 'dbo'";
+                // Remplacer 'GRIM_EMECEF_2025' par la variable dynamique _databaseName
+                var query = $@"SELECT parameter_name, data_type
+                                 FROM information_schema.parameters
+                                 WHERE specific_name = @ProcedureName
+                                 AND specific_catalog = '{_databaseName}'
+                                 AND specific_schema = 'dbo'";
 
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@ProcedureName", procedureName);
@@ -70,7 +82,7 @@ namespace API_PS_SOUTENANCE.Services
                         var param = new SqlParameter
                         {
                             ParameterName = reader.GetString(0),
-                            SqlDbType = GetSqlDbType(reader.GetString(1)) // Convertir le type de données SQL
+                            SqlDbType = GetSqlDbType(reader.GetString(1))
                         };
                         parameters.Add(param);
                     }
@@ -80,7 +92,7 @@ namespace API_PS_SOUTENANCE.Services
             return parameters;
         }
 
-        // Exécuter une procédure stockée avec des paramètres
+        // Le reste de la classe ProcedureService reste inchangé
         public async Task ExecuteProcedureAsync(string procedureName, Dictionary<string, object> inputParams)
         {
             using (var connection = new SqlConnection(_connectionString))
@@ -89,24 +101,19 @@ namespace API_PS_SOUTENANCE.Services
                 using (var command = new SqlCommand(procedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
-                    // Utilisation de DeriveParameters pour récupérer les paramètres exacts
                     SqlCommandBuilder.DeriveParameters(command);
 
                     foreach (SqlParameter param in command.Parameters)
                     {
                         if (param.Direction == ParameterDirection.Input || param.Direction == ParameterDirection.InputOutput)
                         {
-                            string paramName = param.ParameterName.Replace("@", ""); // Supprimer @ du nom du paramètre JSON
-                            
+                            string paramName = param.ParameterName.Replace("@", "");
                             if (inputParams.ContainsKey(paramName))
                             {
                                 object value = inputParams[paramName];
-
-                                // Conversion sécurisée des types pour éviter les erreurs
                                 if (param.SqlDbType == SqlDbType.VarChar || param.SqlDbType == SqlDbType.NVarChar)
                                 {
-                                    param.Value = value?.ToString(); // Forcer la conversion en string
+                                    param.Value = value?.ToString();
                                 }
                                 else if (param.SqlDbType == SqlDbType.Int)
                                 {
@@ -131,38 +138,29 @@ namespace API_PS_SOUTENANCE.Services
                             }
                         }
                     }
-
                     await command.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        // Exécution de la procédure et récupération des résultats
         public async Task<List<Dictionary<string, object>>> ExecuteProcedureWithResultsAsync(string procedureName, Dictionary<string, object> inputParams)
         {
             var results = new List<Dictionary<string, object>>();
-
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
                 using (var command = new SqlCommand(procedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
-                    // Utilisation de DeriveParameters
                     SqlCommandBuilder.DeriveParameters(command);
-
                     foreach (SqlParameter param in command.Parameters)
                     {
                         if (param.Direction == ParameterDirection.Input || param.Direction == ParameterDirection.InputOutput)
                         {
                             string paramName = param.ParameterName.Replace("@", "");
-
                             if (inputParams.ContainsKey(paramName))
                             {
                                 object value = inputParams[paramName];
-
-                                // Sécurisation des conversions
                                 if (param.SqlDbType == SqlDbType.VarChar || param.SqlDbType == SqlDbType.NVarChar)
                                 {
                                     param.Value = value?.ToString();
@@ -190,7 +188,6 @@ namespace API_PS_SOUTENANCE.Services
                             }
                         }
                     }
-
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
@@ -205,11 +202,9 @@ namespace API_PS_SOUTENANCE.Services
                     }
                 }
             }
-
             return results;
         }
 
-        // Méthode pour déterminer le type SQL approprié pour un paramètre
         private SqlDbType GetSqlDbType(string dataType)
         {
             return dataType.ToLower() switch
@@ -222,7 +217,7 @@ namespace API_PS_SOUTENANCE.Services
                 "nvarchar" => SqlDbType.NVarChar,
                 "uniqueidentifier" => SqlDbType.UniqueIdentifier,
                 "decimal" => SqlDbType.Decimal,
-                _ => SqlDbType.NVarChar, // Par défaut
+                _ => SqlDbType.NVarChar,
             };
         }
     }

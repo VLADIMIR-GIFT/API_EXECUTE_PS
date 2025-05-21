@@ -10,16 +10,29 @@ public class StoredProcedureRegistry
 {
     private readonly Dictionary<int, StoredProcedureInfo> _procedures = new Dictionary<int, StoredProcedureInfo>();
     private readonly string _connectionString;
+    private readonly string _databaseName;
+    private readonly XmlConfigurationService _configService;
 
     public StoredProcedureRegistry(XmlConfigurationService configService)
     {
-        _connectionString = configService.GetConnectionString("GRIM_EMECEF_2025");
-        if (string.IsNullOrEmpty(_connectionString))
+        _configService = configService;
+        string defaultDatabaseAlias = _configService.GetDefaultDatabaseAlias();
+        if (string.IsNullOrEmpty(defaultDatabaseAlias))
         {
-            throw new Exception("Chaîne de connexion pour 'GRIM_EMECEF_2025' non trouvée.");
+            throw new Exception("L'alias de base de données par défaut n'a pas été trouvé dans la configuration XML.");
         }
 
-        InitializeProcedures().Wait();
+        _connectionString = _configService.GetConnectionString(defaultDatabaseAlias);
+        if (string.IsNullOrEmpty(_connectionString))
+        {
+            throw new Exception($"La chaîne de connexion pour '{defaultDatabaseAlias}' n'a pas été trouvée.");
+        }
+
+        _databaseName = _configService.GetDatabaseNameFromConnectionString(_connectionString);
+        if (string.IsNullOrEmpty(_databaseName))
+        {
+            throw new ArgumentException("Impossible d'extraire le nom de la base de données pour StoredProcedureRegistry.");
+        }
     }
 
     public async Task InitializeProcedures()
@@ -27,14 +40,13 @@ public class StoredProcedureRegistry
         using (var connection = SqlConnectionFactorys.CreateConnection(_connectionString))
         {
             await connection.OpenAsync();
-            var query = @"SELECT routine_name
-                          FROM information_schema.routines
-                          WHERE routine_type = 'PROCEDURE'
-                          AND routine_catalog = 'GRIM_EMECEF_2025'
-                          AND routine_schema = 'dbo'";
+            var query = $@"SELECT routine_name
+                             FROM information_schema.routines
+                             WHERE routine_type = 'PROCEDURE'
+                             AND routine_catalog = '{_databaseName}'
+                             AND routine_schema = 'dbo'";
 
-            var command = new SqlCommand(query, connection);
-
+            using (var command = new SqlCommand(query, connection))
             using (var reader = await command.ExecuteReaderAsync())
             {
                 int id = 1000;
@@ -45,7 +57,7 @@ public class StoredProcedureRegistry
                     {
                         Id = id,
                         Name = reader.GetString(0),
-                        DatabaseType = EnumTypeDatabase.GRIM_EMECEF_2025
+                        DatabaseType = EnumTypeDatabase.SqlServer
                     });
                     id--;
                 }
@@ -53,10 +65,17 @@ public class StoredProcedureRegistry
         }
 
         var procedureList = GetProcedureList();
-        System.IO.File.WriteAllText("ProcedureList.json", JsonConvert.SerializeObject(procedureList, Formatting.Indented));
+        try
+        {
+            File.WriteAllText("ProcedureList.json", JsonConvert.SerializeObject(procedureList, Formatting.Indented));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur lors de l'écriture de ProcedureList.json: {ex.Message}");
+        }
     }
 
-    public StoredProcedureInfo GetProcedureInfo(int procedureId)
+    public StoredProcedureInfo? GetProcedureInfo(int procedureId) // Peut retourner null
     {
         if (_procedures.TryGetValue(procedureId, out var procedureInfo))
         {
@@ -77,21 +96,34 @@ public class StoredProcedureRegistry
 
     public async Task<bool> CheckProcedureExistsInDatabase(int procedureId)
     {
+        if (!_procedures.ContainsKey(procedureId))
+        {
+            await InitializeProcedures();
+            if (!_procedures.ContainsKey(procedureId))
+            {
+                return false;
+            }
+        }
+
         using (var connection = SqlConnectionFactorys.CreateConnection(_connectionString))
         {
             await connection.OpenAsync();
-            var query = @"SELECT COUNT(*)
-                          FROM information_schema.routines
-                          WHERE routine_type = 'PROCEDURE'
-                          AND routine_catalog = 'GRIM_EMECEF_2025'
-                          AND routine_schema = 'dbo'
-                          AND routine_name = @ProcedureName";
+            var query = $@"SELECT COUNT(*)
+                             FROM information_schema.routines
+                             WHERE routine_type = 'PROCEDURE'
+                             AND routine_catalog = '{_databaseName}'
+                             AND routine_schema = 'dbo'
+                             AND routine_name = @ProcedureName";
 
-            var command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@ProcedureName", _procedures[procedureId].Name);
+            using (var command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@ProcedureName", _procedures[procedureId].Name);
 
-            int count = (int)await command.ExecuteScalarAsync();
-            return count > 0;
+                // CORRECTION CS8605 ici
+                object? result = await command.ExecuteScalarAsync(); // Permet un retour null
+                int count = (result == null || result == DBNull.Value) ? 0 : Convert.ToInt32(result);
+                return count > 0;
+            }
         }
     }
 
@@ -100,4 +132,3 @@ public class StoredProcedureRegistry
         return _procedures;
     }
 }
-

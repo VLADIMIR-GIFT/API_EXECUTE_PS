@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using System.Text.Json;
 using System.Linq;
+using System.IO;
 
 public class ProcedureLoader
 {
@@ -22,7 +23,7 @@ public class ProcedureLoader
 
     public async Task<object> ExecuteProcedureAsync(string procedureName, Dictionary<string, object> parameters, EnumTypeRecordset recordsetType)
     {
-        string databaseAlias = null;
+        string? databaseAlias = null; // CORRECTION CS8600
         if (int.TryParse(procedureName, out int procedureId))
         {
             var procedureInfo = _procedureRegistry.GetProcedureInfo(procedureId);
@@ -35,27 +36,31 @@ public class ProcedureLoader
                     if (procedureInfo != null)
                     {
                         procedureName = procedureInfo.Name;
-                        databaseAlias = procedureInfo.DatabaseType.ToString();
+                        databaseAlias = EnumTypeDatabase.SqlServer.ToString();
                     }
                     else
                     {
-                        throw new Exception($"Procedure ID {procedureId} non trouvé dans la base de données.");
+                        throw new Exception($"Procédure ID {procedureId} trouvée dans la base de données mais impossible de récupérer ses informations après initialisation.");
                     }
                 }
                 else
                 {
-                    throw new Exception($"Procedure ID {procedureId} non trouvé.");
+                    throw new Exception($"Procédure ID {procedureId} non trouvée dans le registre ni dans la base de données.");
                 }
             }
             else
             {
                 procedureName = procedureInfo.Name;
-                databaseAlias = procedureInfo.DatabaseType.ToString();
+                databaseAlias = EnumTypeDatabase.SqlServer.ToString();
             }
         }
         else
         {
             databaseAlias = _configService.GetDefaultDatabaseAlias();
+            if (string.IsNullOrEmpty(databaseAlias))
+            {
+                throw new Exception("Aucun alias de base de données par défaut n'est configuré ou le nom de la procédure n'est pas un ID valide.");
+            }
         }
 
         var databaseConfig = _configService.GetDatabaseConfiguration(databaseAlias);
@@ -64,11 +69,13 @@ public class ProcedureLoader
             throw new Exception($"Configuration de la base de données introuvable pour l'alias '{databaseAlias}'.");
         }
 
-        using (var connection = SqlConnectionFactorys.CreateConnection(databaseConfig.ConnectionString))
+        // CORRECTION CS1061 : Caster explicitement la connexion vers SqlConnection
+        using (var connection = (SqlConnection)DatabaseFactory.CreateConnection(EnumTypeDatabase.SqlServer, databaseConfig.ConnectionString))
         {
-            await connection.OpenAsync();
-            using (var command = new SqlCommand(procedureName, connection))
+            await connection.OpenAsync(); // Maintenant OpenAsync est accessible
+            using (var command = (SqlCommand)connection.CreateCommand())
             {
+                command.CommandText = procedureName;
                 command.CommandType = CommandType.StoredProcedure;
 
                 try
@@ -77,7 +84,8 @@ public class ProcedureLoader
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur lors de l'appel à DeriveParameters : {ex.Message}");
+                    Console.WriteLine($"Erreur lors de l'appel à DeriveParameters pour la procédure '{procedureName}': {ex.Message}");
+                    throw new InvalidOperationException($"Impossible de dériver les paramètres pour la procédure '{procedureName}'. Vérifiez les permissions ou si la procédure existe.", ex);
                 }
 
                 foreach (SqlParameter param in command.Parameters)
@@ -88,18 +96,20 @@ public class ProcedureLoader
 
                         if (parameters.ContainsKey(paramName))
                         {
-                            object value = parameters[paramName];
-
+                            object? value = parameters[paramName]; // Utilisation de object?
                             if (value is JsonElement jsonElement)
                             {
                                 value = ConvertJsonElement(jsonElement, param.SqlDbType);
                             }
-
                             param.Value = value ?? DBNull.Value;
+                        }
+                        else if (param.IsNullable)
+                        {
+                            param.Value = DBNull.Value;
                         }
                         else
                         {
-                            throw new ArgumentException($"Le paramètre {param.ParameterName} est manquant dans les données JSON.");
+                            throw new ArgumentException($"Le paramètre '{param.ParameterName}' est manquant dans les données JSON et n'est pas nullable.");
                         }
                     }
                 }
@@ -121,6 +131,27 @@ public class ProcedureLoader
         }
     }
 
+    // CORRECTION CS0103 : Implémentation correcte de ConvertJsonElement
+    private object? ConvertJsonElement(JsonElement jsonElement, SqlDbType sqlDbType)
+    {
+        // Gère les valeurs nulles ou indéfinies de JsonElement
+        if (jsonElement.ValueKind == JsonValueKind.Null || jsonElement.ValueKind == JsonValueKind.Undefined)
+        {
+            return null;
+        }
+
+        return sqlDbType switch
+        {
+            SqlDbType.Int => jsonElement.ValueKind == JsonValueKind.Number ? (object?)jsonElement.GetInt32() : null,
+            SqlDbType.Decimal => jsonElement.ValueKind == JsonValueKind.Number ? (object?)jsonElement.GetDecimal() : null,
+            SqlDbType.Bit => jsonElement.ValueKind == JsonValueKind.True || jsonElement.ValueKind == JsonValueKind.False ? (object?)jsonElement.GetBoolean() : null,
+            SqlDbType.DateTime => jsonElement.ValueKind == JsonValueKind.String && DateTime.TryParse(jsonElement.GetString(), out var dt) ? (object?)dt : null,
+            SqlDbType.UniqueIdentifier => jsonElement.ValueKind == JsonValueKind.String && Guid.TryParse(jsonElement.GetString(), out var guid) ? (object?)guid : null,
+            // Pour les chaînes et autres types qui peuvent être convertis à partir de chaînes
+            _ => jsonElement.ValueKind == JsonValueKind.String ? (object?)jsonElement.GetString() : jsonElement.ToString()
+        };
+    }
+
     private async Task<object> ExecuteDataTableAsync(SqlCommand command)
     {
         var dataTable = new DataTable();
@@ -140,7 +171,7 @@ public class ProcedureLoader
         }
 
         var data = dataTable.Rows.Cast<DataRow>().Select(row =>
-            dataTable.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col.ColumnName])
+            dataTable.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col.ColumnName] is DBNull ? null : row[col])
         ).ToList();
 
         return new { Headers = headers, Data = data };
@@ -165,54 +196,43 @@ public class ProcedureLoader
 
     private async Task<object> ExecuteDataSetAsync(SqlCommand command)
     {
+        var ds = new DataSet();
         using (var adapter = new SqlDataAdapter(command))
         {
-            var dataSet = new DataSet();
-            await Task.Run(() => adapter.Fill(dataSet));
-
-            var results = dataSet.Tables.Cast<DataTable>().Select(table => new
-            {
-                Headers = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList(),
-                Data = table.Rows.Cast<DataRow>().Select(row =>
-                    table.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col.ColumnName])
-                ).ToList()
-            }).ToList();
-
-            return results;
+            await Task.Run(() => adapter.Fill(ds));
         }
-    }
-
-    private async Task<string> ExecuteJsonAsync(SqlCommand command)
-    {
-        var dataSet = await ExecuteDataSetAsync(command);
-        return JsonConvert.SerializeObject(dataSet);
-    }
-
-    private async Task<string> ExecuteXmlAsync(SqlCommand command)
-    {
-        var dataSet = await ExecuteDataSetAsync(command);
-        return System.Text.Json.JsonSerializer.Serialize(dataSet);
-    }
-
-    private object ConvertJsonElement(JsonElement element, SqlDbType dbType)
-    {
-        try
+        return ds.Tables.Cast<DataTable>().Select(table => new
         {
-            return dbType switch
-            {
-                SqlDbType.Int => element.GetInt32(),
-                SqlDbType.BigInt => element.GetInt64(),
-                SqlDbType.Decimal => element.GetDecimal(),
-                SqlDbType.Float => element.GetDouble(),
-                SqlDbType.Bit => element.GetBoolean(),
-                SqlDbType.NVarChar or SqlDbType.VarChar or SqlDbType.Text => element.GetString(),
-                SqlDbType.DateTime or SqlDbType.Date => element.GetDateTime(),
-                _ => element.ToString()
-            };
+            TableName = table.TableName,
+            Headers = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList(),
+            Data = table.Rows.Cast<DataRow>().Select(row =>
+                table.Columns.Cast<DataColumn>().ToDictionary(col => col.ColumnName, col => row[col.ColumnName] is DBNull ? null : row[col])
+            ).ToList()
+        }).ToList();
+    }
+
+    private async Task<object> ExecuteJsonAsync(SqlCommand command)
+    {
+        var dataTable = new DataTable();
+        using (var adapter = new SqlDataAdapter(command))
+        {
+            await Task.Run(() => adapter.Fill(dataTable));
         }
-        catch (Exception ex)
+        return JsonConvert.SerializeObject(ConvertDataTableToList(dataTable), Formatting.Indented);
+    }
+
+    private async Task<object> ExecuteXmlAsync(SqlCommand command)
+    {
+        var dataTable = new DataTable();
+        using (var adapter = new SqlDataAdapter(command))
         {
-            throw new InvalidOperationException($"Erreur de conversion du paramètre {element} vers {dbType}: {ex.Message}", ex);
+            await Task.Run(() => adapter.Fill(dataTable));
+        }
+        using (var writer = new StringWriter())
+        {
+            dataTable.WriteXml(writer, XmlWriteMode.WriteSchema);
+            return writer.ToString();
         }
     }
 }
+// Assurez-vous que cette énumération est définie une seule fois dans votre projet.

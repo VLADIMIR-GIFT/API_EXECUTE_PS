@@ -2,9 +2,9 @@
 <DatabaseConfigurations>
     <DatabaseList>
         <DatabaseConfiguration>
-            <DatabaseAlias>GRIM_EMECEF_2025</DatabaseAlias>
-            <DatabaseType>GRIM_EMECEF_2025</DatabaseType>
-            <ConnectionString>Server=DESKTOP-P7VE0KJ\SQL_SERVER_EX_22;Database=GRIM_EMECEF_2025;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;
+            <DatabaseAlias>base_ecole</DatabaseAlias>
+            <DatabaseType>base_ecole</DatabaseType>
+            <ConnectionString>Server=DESKTOP-P7VE0KJ\SQL_SERVER_EX_22;Database=base_ecole;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;
 </ConnectionString>
         </DatabaseConfiguration>
         <DatabaseConfiguration>
